@@ -1,9 +1,43 @@
-﻿namespace PFScrapper
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AngleSharp;
+using AngleSharp.Dom;
+using PFScrapper.Vendor;
+
+namespace PFScrapper
 {
-    internal class Program
+    internal static class Program
     {
-        public static void Main(string[] args)
+        private const string Address = "https://www.d20pfsrd.com/feats/Combat-feats/";
+        private static readonly Url _url = new Url(Address);
+
+        public static async Task Main(string[] args)
         {
+            IConfiguration config = Configuration.Default.WithDefaultLoader();
+            IBrowsingContext context = BrowsingContext.New(config);
+            IDocument document = await context.OpenAsync(_url);
+
+            const string selector = "table";
+            IElement table = document.QuerySelectorAll(selector).First();
+            IElement tbody = table.QuerySelector("tbody");
+
+            var feats = tbody.Children.Select(tr => new ParsedFeat
+                (
+                    name: tr.Children[0],
+                    category: tr.Children[1],
+                    prereq: tr.Children[2],
+                    benefit: tr.Children[3],
+                    source: tr.Children[4]
+                ))
+                .ToList();
+
+            foreach ((ParsedFeat item, int i) in feats.WithIndex())
+            {
+                Console.WriteLine(item);
+                if (i < feats.Count - 1) Console.WriteLine("\n");
+            }
         }
     }
 }
