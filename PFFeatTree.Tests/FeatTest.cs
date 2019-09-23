@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using NFluent;
 using PFFeatTree.Tests.Builders;
 using Xunit;
@@ -81,6 +83,38 @@ namespace PFFeatTree.Tests
                 Check.That(sut.TextPrereq).IsEqualTo("Prereq02");
                 Check.That(sut.TextBenefit).IsEqualTo("Benefit02");
                 Check.That(sut.TextSource).IsEqualTo("Source02");
+            }
+        }
+
+        public class TreeBehaviour
+        {
+            [Fact]
+            public void Can_Add_Feat_Prereqs()
+            {
+                Feat feat = FeatBuilder.Get().Build();
+                Feat sut = FeatBuilder.Get(2).Build();
+
+                sut.AddFeatPrereq(feat);
+
+                Check.That(sut.Prereqs).HasSize(1);
+                Check.That(sut.PrereqFeats).ContainsExactly(feat);
+                Check.That(feat.Dependents).ContainsExactly(sut);
+            }
+
+            [Fact]
+            public void Can_Add_Stat_Prereqs()
+            {
+                StatPrereq prereq = StatPrereq.With().Str(15).Bab(6).Build();
+                Feat sut = FeatBuilder.Get().Build();
+
+                sut.AddStatPrereq(prereq);
+
+                Check.That(sut.Prereqs).HasSize(1);
+                Check.That(sut.PrereqFeats).IsEmpty();
+                Check.That(sut.Prereqs.First()).IsInstanceOf<StatPrereq>();
+                Check.That(((StatPrereq) sut.Prereqs.First()).Constraints)
+                    .HasSize(2).And.ContainsPair(Stat.Str, 15)
+                    .And.ContainsPair(Stat.Bab, 6);
             }
         }
     }
