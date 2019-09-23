@@ -104,7 +104,7 @@ namespace PFFeatTree.Tests
             [Fact]
             public void Can_Add_Stat_Prereqs()
             {
-                StatPrereq prereq = StatPrereq.With().Str(15).Bab(6).Build();
+                var prereq = new StatPrereq(StatBlock.With().Str(15).Bab(6).Build());
                 Feat sut = FeatBuilder.Get().Build();
 
                 sut.AddStatPrereq(prereq);

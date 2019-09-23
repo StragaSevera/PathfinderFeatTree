@@ -4,12 +4,12 @@ using Xunit;
 
 namespace PFFeatTree.Tests
 {
-    public class StatPrereqTest
+    public class StatBlockTest
     {
         [Fact]
         public void Can_Be_Created_With_Dict()
         {
-            var sut = new StatPrereq(new Dictionary<Stat, int>
+            var sut = new StatBlock(new Dictionary<Stat, int>
             {
                 [Stat.Str] = 13,
                 [Stat.Bab] = 2
@@ -23,7 +23,7 @@ namespace PFFeatTree.Tests
         [Fact]
         public void Can_Be_Created_By_Builder()
         {
-            StatPrereq sut = StatPrereq.With().Str(13).Dex(14).Con(15).Int(16).Wis(17).Cha(18).Bab
+            StatBlock sut = StatBlock.With().Str(13).Dex(14).Con(15).Int(16).Wis(17).Cha(18).Bab
             (3).Cl(5).Build();
 
             Check.That(sut.Constraints).HasSize(8);
