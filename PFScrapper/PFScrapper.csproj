@@ -51,6 +51,8 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="FeatList.cs" />
+        <Compile Include="Link.cs" />
         <Compile Include="ParsedFeat.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

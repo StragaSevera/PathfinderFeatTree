@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -10,16 +9,19 @@ namespace PFScrapper
 {
     public class ParsedFeat
     {
-        public string Name { get; }
-        public string Category { get; }
-        public string Prereq { get; }
-        public string Benefit { get; }
-        public string Source { get; }
+        private string Name { get; }
+        private string Category { get; }
+        private string Prereq { get; }
+        private string Benefit { get; }
+        private string Source { get; }
 
-        public Link NameLink { get; }
-        public IReadOnlyList<Link> PrereqLinks { get; }
-        public IReadOnlyList<Link> BenefitLinks { get; }
-        public Link SourceLink { get; }
+        private readonly Link _nameLink;
+        private readonly IReadOnlyList<Link> _prereqLinks;
+        private readonly IReadOnlyList<Link> _benefitLinks;
+        private readonly Link _sourceLink;
+
+        private readonly IList<ParsedFeat> _prereqFeats = new List<ParsedFeat>();
+        private readonly IList<ParsedFeat> _dependentFeats = new List<ParsedFeat>();
 
         public ParsedFeat(IElement name, IElement category, IElement prereq,
             IElement benefit, IElement source)
@@ -30,61 +32,58 @@ namespace PFScrapper
             Benefit = benefit.TextContent;
             Source = source.TextContent;
 
-            NameLink = Link.Create(name.QuerySelectorAll<IHtmlAnchorElement>("a").FirstOrDefault());
-            PrereqLinks = prereq
+            _nameLink = Link.Create(name.QuerySelectorAll<IHtmlAnchorElement>("a").FirstOrDefault());
+            _prereqLinks = prereq
                 .QuerySelectorAll<IHtmlAnchorElement>("a")
                 .Select(Link.Create).ToList();
-            BenefitLinks = benefit
+            _benefitLinks = benefit
                 .QuerySelectorAll<IHtmlAnchorElement>("a")
                 .Select(Link.Create).ToList();
-            NameLink =
+            _sourceLink =
                 Link.Create(source.QuerySelectorAll<IHtmlAnchorElement>("a").FirstOrDefault());
         }
 
-        public override string ToString()
+        public string FormatWithLinks()
         {
-            string prereqs = PrereqLinks.Any()
-                ? string.Join("\n", PrereqLinks.Select(l => l.ToString()))
+            string prereqs = _prereqLinks.Any()
+                ? string.Join("\n", _prereqLinks.Select(l => l.ToString()))
                 : Link.Empty.ToString();
-            string benefits = BenefitLinks.Any()
-                ? string.Join("\n", BenefitLinks.Select(l => l.ToString()))
+            string benefits = _benefitLinks.Any()
+                ? string.Join("\n", _benefitLinks.Select(l => l.ToString()))
                 : Link.Empty.ToString();
-            return $"Name: {Name}\n{NameLink}\n" +
+            return $"Name: {Name}\n{_nameLink}\n" +
                    $"Category: {Category}\n" +
                    $"Prerequisites: {Prereq}\n{prereqs}\n" +
                    $"Benefit: {Benefit}\n{benefits}\n" +
-                   $"Source: {Source}\n{NameLink}";
-        }
-    }
-
-    public class Link
-    {
-        public Uri Uri { get; }
-        public string Name { get; }
-
-        private static readonly Uri EmptyUri = new Uri("https://www.d20pfsrd.com");
-        public static readonly Link Empty = new Link();
-
-        private Link(IHtmlAnchorElement anchor)
-        {
-            Uri = new Uri(anchor.Href);
-            Name = anchor.TextContent;
-        }
-
-        private Link()
-        {
-            Uri = EmptyUri;
-            Name = "Empty";
-        }
-
-        public static Link Create(IHtmlAnchorElement anchor)
-        {
-            return anchor != null ? new Link(anchor) : Empty;
+                   $"Source: {Source}\n{_sourceLink}";
         }
 
         public override string ToString()
         {
-            return Uri == EmptyUri ? "    Empty link" : $"    Link \"{Name}\": {Uri}";
+            string prereqs = _prereqFeats.Any()
+                ? string.Join("\n", _prereqFeats.Select(l => "    " + l.Name))
+                : "    No prerequisite feats";
+            return $"Name: {Name}\n" +
+                   $"Category: {Category}\n" +
+                   $"Prerequisites: {Prereq}\n{prereqs}\n" +
+                   $"Benefit: {Benefit}\n" +
+                   $"Source: {Source}\n";
+        }
+
+        public void MapLinks(IEnumerable<ParsedFeat> feats)
+        {
+            var prereqFeats = feats.Where(f => _prereqLinks.Contains(f._nameLink));
+
+            foreach (ParsedFeat feat in prereqFeats)
+            {
+                AddPrereqFeat(feat);
+            }
+        }
+
+        private void AddPrereqFeat(ParsedFeat feat)
+        {
+            _prereqFeats.Add(feat);
+            feat._dependentFeats.Add(this);
         }
     }
 }
