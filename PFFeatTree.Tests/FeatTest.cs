@@ -100,6 +100,30 @@ namespace PFFeatTree.Tests
             }
 
             [Fact]
+            public void Can_Check_Feat_Prereqs_When_True()
+            {
+                Feat feat = FeatBuilder.Get().Build();
+                var character = new Character(new[] {feat});
+                Feat sut = FeatBuilder.Get(2).Build();
+
+                sut.AddFeatPrereq(feat);
+
+                Check.That(sut.CanBeTakenBy(character)).IsTrue();
+            }
+
+            [Fact]
+            public void Can_Check_Feat_Prereqs_When_False()
+            {
+                Feat feat = FeatBuilder.Get().Build();
+                var character = new Character();
+                Feat sut = FeatBuilder.Get(2).Build();
+
+                sut.AddFeatPrereq(feat);
+
+                Check.That(sut.CanBeTakenBy(character)).IsFalse();
+            }
+
+            [Fact]
             public void Can_Add_Stat_Prereqs()
             {
                 var prereq = new StatPrereq(StatBlock.With().Str(15).Bab(6).Build());
@@ -113,6 +137,66 @@ namespace PFFeatTree.Tests
                 Check.That(((StatPrereq) sut.Prereqs.First()).Constraints)
                     .HasSize(2).And.ContainsPair(Stat.Str, 15)
                     .And.ContainsPair(Stat.Bab, 6);
+            }
+
+            [Fact]
+            public void Can_Check_Stat_Prereqs_When_True()
+            {
+                var character = new Character(StatBlock.With().Default().Str(14).Build());
+                var prereq = new StatPrereq(StatBlock.With().Str(13).Build());
+                Feat sut = FeatBuilder.Get().Build();
+
+                sut.AddStatPrereq(prereq);
+
+                Check.That(sut.CanBeTakenBy(character)).IsTrue();
+            }
+
+            [Fact]
+            public void Can_Check_Stat_Prereqs_When_False()
+            {
+                var character = new Character(StatBlock.With().Default().Str(14).Build());
+                var prereq = new StatPrereq(StatBlock.With().Str(15).Build());
+                Feat sut = FeatBuilder.Get().Build();
+
+                sut.AddStatPrereq(prereq);
+
+                Check.That(sut.CanBeTakenBy(character)).IsFalse();
+            }
+
+            [Fact]
+            public void Can_Check_Complex_Prereqs_When_Satisfies()
+            {
+                Feat feat = FeatBuilder.Get().Build();
+                var character = new Character(StatBlock.With().Default().Str(14).Build(),
+                    new[] {feat});
+                var statPrereq = new StatPrereq(StatBlock.With().Str(13).Build());
+                Feat sut = FeatBuilder.Get().Build();
+
+                sut.AddFeatPrereq(feat);
+                sut.AddStatPrereq(statPrereq);
+
+                Check.That(sut.CanBeTakenBy(character)).IsTrue();
+            }
+
+            [Theory]
+            [InlineData(false, true)]
+            [InlineData(true, false)]
+            [InlineData(false, false)]
+            public void Can_Check_Complex_Prereqs_When_Does_Not_Satisfy(bool goodFeat, bool goodStat)
+            {
+                Feat feat = FeatBuilder.Get().Build();
+                var character = new Character(
+                    StatBlock.With().Default()
+                        .Str(goodStat ? 14 : 12).Build(),
+                    goodFeat ? new[] {feat} : new Feat[]{}
+                );
+                var statPrereq = new StatPrereq(StatBlock.With().Str(13).Build());
+                Feat sut = FeatBuilder.Get().Build();
+
+                sut.AddFeatPrereq(feat);
+                sut.AddStatPrereq(statPrereq);
+
+                Check.That(sut.CanBeTakenBy(character)).IsFalse();
             }
         }
     }

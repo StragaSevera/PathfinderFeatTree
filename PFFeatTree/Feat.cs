@@ -32,6 +32,7 @@ namespace PFFeatTree
             TextSource = Guard.Argument(textSource, nameof(textSource)).NotNull();
         }
 
+        //TODO: Compact to one simple AddPrereq
         public void AddFeatPrereq(Feat prereq)
         {
             _prereqs.Add(new FeatPrereq(prereq));
@@ -41,6 +42,11 @@ namespace PFFeatTree
         public void AddStatPrereq(StatPrereq prereq)
         {
             _prereqs.Add(prereq);
+        }
+
+        public bool CanBeTakenBy(Character character)
+        {
+            return Prereqs.All(e => e.IsSatisfiedBy(character));
         }
     }
 }
