@@ -9,5 +9,10 @@ namespace PFFeatTree
         {
             Feat = feat;
         }
+
+        public bool IsSatisfiedBy(Character character)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
