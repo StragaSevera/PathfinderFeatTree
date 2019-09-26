@@ -75,6 +75,24 @@ namespace PFFeatTree
         {
             return new Builder();
         }
+
+        public int this[Stat key] => Constraints.GetValueOrDefault(key, -1);
+
+        public int Str => this[Stat.Str];
+        public int Dex => this[Stat.Dex];
+        public int Con => this[Stat.Con];
+        public int Int => this[Stat.Int];
+        public int Wis => this[Stat.Wis];
+        public int Cha => this[Stat.Cha];
+        public int Bab => this[Stat.Bab];
+        public int Cl => this[Stat.Cl];
+
+        public override string ToString()
+        {
+            return $"STR: {Str}; DEX: {Dex}; CON: {Con}; " +
+                   $"INT: {Int}; WIS: {Wis}; CHA: {Cha}; " +
+                   $"BAB: {Bab}; CL: {Cl};";
+        }
     }
 
 

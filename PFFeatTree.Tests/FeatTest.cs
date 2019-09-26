@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NFluent;
 using PFFeatTree.Tests.Builders;
@@ -8,7 +6,7 @@ using Xunit;
 
 namespace PFFeatTree.Tests
 {
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class FeatTest
     {
         public class Building
