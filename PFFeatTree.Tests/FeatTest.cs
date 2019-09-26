@@ -84,6 +84,20 @@ namespace PFFeatTree.Tests
             }
         }
 
+        public class Features
+        {
+            [Fact]
+            public void Can_Add_Dependents()
+            {
+                Feat feat = FeatBuilder.Get().Build();
+                Feat sut = FeatBuilder.Get(2).Build();
+
+                sut.AddDependent(feat);
+
+                Check.That(sut.Dependents).ContainsExactly(feat);
+            }
+        }
+
         public class TreeBehaviour
         {
             [Fact]
@@ -126,10 +140,10 @@ namespace PFFeatTree.Tests
             [Fact]
             public void Can_Add_Stat_Prereqs()
             {
-                var prereq = new StatPrereq(StatBlock.With().Str(15).Bab(6).Build());
+                StatBlock stat = StatBlock.With().Str(15).Bab(6).Build();
                 Feat sut = FeatBuilder.Get().Build();
 
-                sut.AddStatPrereq(prereq);
+                sut.AddStatPrereq(stat);
 
                 Check.That(sut.Prereqs).HasSize(1);
                 Check.That(sut.PrereqFeats).IsEmpty();
@@ -143,10 +157,10 @@ namespace PFFeatTree.Tests
             public void Can_Check_Stat_Prereqs_When_True()
             {
                 var character = new Character(StatBlock.With().Default().Str(14).Build());
-                var prereq = new StatPrereq(StatBlock.With().Str(13).Build());
+                StatBlock stat = StatBlock.With().Str(13).Build();
                 Feat sut = FeatBuilder.Get().Build();
 
-                sut.AddStatPrereq(prereq);
+                sut.AddStatPrereq(stat);
 
                 Check.That(sut.CanBeTakenBy(character)).IsTrue();
             }
@@ -155,7 +169,7 @@ namespace PFFeatTree.Tests
             public void Can_Check_Stat_Prereqs_When_False()
             {
                 var character = new Character(StatBlock.With().Default().Str(14).Build());
-                var prereq = new StatPrereq(StatBlock.With().Str(15).Build());
+                StatBlock prereq = StatBlock.With().Str(15).Build();
                 Feat sut = FeatBuilder.Get().Build();
 
                 sut.AddStatPrereq(prereq);
@@ -169,11 +183,11 @@ namespace PFFeatTree.Tests
                 Feat feat = FeatBuilder.Get().Build();
                 var character = new Character(StatBlock.With().Default().Str(14).Build(),
                     new[] {feat});
-                var statPrereq = new StatPrereq(StatBlock.With().Str(13).Build());
+                StatBlock stat = StatBlock.With().Str(13).Build();
                 Feat sut = FeatBuilder.Get().Build();
 
                 sut.AddFeatPrereq(feat);
-                sut.AddStatPrereq(statPrereq);
+                sut.AddStatPrereq(stat);
 
                 Check.That(sut.CanBeTakenBy(character)).IsTrue();
             }
@@ -190,11 +204,11 @@ namespace PFFeatTree.Tests
                         .Str(goodStat ? 14 : 12).Build(),
                     goodFeat ? new[] {feat} : new Feat[]{}
                 );
-                var statPrereq = new StatPrereq(StatBlock.With().Str(13).Build());
+                StatBlock stat = StatBlock.With().Str(13).Build();
                 Feat sut = FeatBuilder.Get().Build();
 
                 sut.AddFeatPrereq(feat);
-                sut.AddStatPrereq(statPrereq);
+                sut.AddStatPrereq(stat);
 
                 Check.That(sut.CanBeTakenBy(character)).IsFalse();
             }

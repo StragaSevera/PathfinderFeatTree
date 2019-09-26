@@ -4,5 +4,6 @@ namespace PFFeatTree
     {
         string Name { get; }
         bool IsSatisfiedBy(Character character);
+        void OnAddedToFeat(Feat target);
     }
 }

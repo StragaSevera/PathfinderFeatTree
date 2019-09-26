@@ -16,5 +16,10 @@ namespace PFFeatTree
         {
             return character.Feats.Contains(Feat);
         }
+
+        public void OnAddedToFeat(Feat target)
+        {
+            Feat.AddDependent(target);
+        }
     }
 }

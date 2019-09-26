@@ -20,5 +20,9 @@ namespace PFFeatTree
         {
             return Constraints.All(e => character.Stats[e.Key] >= e.Value);
         }
+
+        public void OnAddedToFeat(Feat target)
+        {
+        }
     }
 }

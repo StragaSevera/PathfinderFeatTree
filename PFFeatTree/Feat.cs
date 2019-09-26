@@ -33,20 +33,30 @@ namespace PFFeatTree
         }
 
         //TODO: Compact to one simple AddPrereq
-        public void AddFeatPrereq(Feat prereq)
-        {
-            _prereqs.Add(new FeatPrereq(prereq));
-            prereq._dependents.Add(this);
-        }
-
-        public void AddStatPrereq(StatPrereq prereq)
+        private void AddPrereq(IPrereq prereq)
         {
             _prereqs.Add(prereq);
+            prereq.OnAddedToFeat(this);
+        }
+
+        public void AddFeatPrereq(Feat prereqFeat)
+        {
+            AddPrereq(new FeatPrereq(prereqFeat));
+        }
+
+        public void AddStatPrereq(StatBlock prereqStat)
+        {
+            AddPrereq(new StatPrereq(prereqStat));
         }
 
         public bool CanBeTakenBy(Character character)
         {
             return Prereqs.All(e => e.IsSatisfiedBy(character));
+        }
+
+        public void AddDependent(Feat feat)
+        {
+            _dependents.Add(feat);
         }
     }
 }

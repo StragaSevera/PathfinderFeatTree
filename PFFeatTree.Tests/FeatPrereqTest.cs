@@ -28,5 +28,17 @@ namespace PFFeatTree.Tests
 
             Check.That(sut.IsSatisfiedBy(character)).IsFalse();
         }
+
+        [Fact]
+        public void When_Added_To_Feat_Adds_Feat_To_Dependents()
+        {
+            Feat target = FeatBuilder.Get().Build();
+            Feat feat = FeatBuilder.Get(2).Build();
+            var sut = new FeatPrereq(feat);
+
+            sut.OnAddedToFeat(target);
+
+            Check.That(feat.Dependents).ContainsExactly(target);
+        }
     }
 }
