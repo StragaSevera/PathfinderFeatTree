@@ -1,17 +1,31 @@
+using System.Collections.Generic;
+using System.Collections.Immutable;
+
 namespace PFFeatTree
 {
     public class Character
     {
-        public StatBlock StatBlock { get; }
+        public StatBlock Stats { get; }
+        public IReadOnlyList<Feat> Feats { get; } = ImmutableList<Feat>.Empty;
 
         public Character()
         {
-            StatBlock = StatBlock.With().Default().Build();
+            Stats = StatBlock.With().Default().Build();
         }
 
-        public Character(StatBlock statBlock)
+        public Character(StatBlock stats)
         {
-            StatBlock = statBlock;
+            Stats = stats;
+        }
+
+        public Character(IEnumerable<Feat> feats): this()
+        {
+            Feats = feats.ToImmutableList();
+        }
+
+        public Character(StatBlock stats, IEnumerable<Feat> feats): this(stats)
+        {
+            Feats = feats.ToImmutableList();
         }
     }
 }

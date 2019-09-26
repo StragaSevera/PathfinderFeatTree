@@ -18,7 +18,7 @@ namespace PFFeatTree
 
         public bool IsSatisfiedBy(Character character)
         {
-            return Constraints.All(e => character.StatBlock[e.Key] >= e.Value);
+            return Constraints.All(e => character.Stats[e.Key] >= e.Value);
         }
     }
 }

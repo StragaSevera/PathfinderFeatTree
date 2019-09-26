@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace PFFeatTree
 {
     public class FeatPrereq : IPrereq
@@ -12,7 +14,7 @@ namespace PFFeatTree
 
         public bool IsSatisfiedBy(Character character)
         {
-            throw new System.NotImplementedException();
+            return character.Feats.Contains(Feat);
         }
     }
 }
