@@ -5,69 +5,81 @@ namespace PFFeatTree
     public class StatBlock
     {
         //TODO: Evaluate logic of storing in dict vs naked
-        private readonly Dictionary<Stat, int> _constraints;
-        public IReadOnlyDictionary<Stat, int> Constraints => _constraints;
+        private readonly Dictionary<Stat, int> _stats;
+        public IReadOnlyDictionary<Stat, int> Stats => _stats;
 
-        public StatBlock(Dictionary<Stat, int> constraints)
+        public StatBlock(Dictionary<Stat, int> stats)
         {
-            _constraints = constraints;
+            _stats = stats;
         }
 
         public class Builder
         {
-            private readonly Dictionary<Stat, int> _constraints = new Dictionary<Stat, int>();
+            private readonly Dictionary<Stat, int> _stats = new Dictionary<Stat, int>();
+
+            public Builder Default()
+            {
+                _stats[Stat.Str] = 10;
+                _stats[Stat.Dex] = 10;
+                _stats[Stat.Con] = 10;
+                _stats[Stat.Int] = 10;
+                _stats[Stat.Wis] = 10;
+                _stats[Stat.Cha] = 10;
+                _stats[Stat.Bab] = 1;
+                return this;
+            }
 
             public Builder Str(int value)
             {
-                _constraints[Stat.Str] = value;
+                _stats[Stat.Str] = value;
                 return this;
             }
 
             public Builder Dex(int value)
             {
-                _constraints[Stat.Dex] = value;
+                _stats[Stat.Dex] = value;
                 return this;
             }
 
             public Builder Con(int value)
             {
-                _constraints[Stat.Con] = value;
+                _stats[Stat.Con] = value;
                 return this;
             }
 
             public Builder Int(int value)
             {
-                _constraints[Stat.Int] = value;
+                _stats[Stat.Int] = value;
                 return this;
             }
 
             public Builder Wis(int value)
             {
-                _constraints[Stat.Wis] = value;
+                _stats[Stat.Wis] = value;
                 return this;
             }
 
             public Builder Cha(int value)
             {
-                _constraints[Stat.Cha] = value;
+                _stats[Stat.Cha] = value;
                 return this;
             }
 
             public Builder Bab(int value)
             {
-                _constraints[Stat.Bab] = value;
+                _stats[Stat.Bab] = value;
                 return this;
             }
 
             public Builder Cl(int value)
             {
-                _constraints[Stat.Cl] = value;
+                _stats[Stat.Cl] = value;
                 return this;
             }
 
             public StatBlock Build()
             {
-                return new StatBlock(_constraints);
+                return new StatBlock(_stats);
             }
         }
 
@@ -76,7 +88,7 @@ namespace PFFeatTree
             return new Builder();
         }
 
-        public int this[Stat key] => Constraints.GetValueOrDefault(key, -1);
+        public int this[Stat key] => Stats.GetValueOrDefault(key, -1);
 
         public int Str => this[Stat.Str];
         public int Dex => this[Stat.Dex];

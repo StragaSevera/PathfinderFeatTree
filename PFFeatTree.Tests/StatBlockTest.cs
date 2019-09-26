@@ -18,9 +18,9 @@ namespace PFFeatTree.Tests
                     [Stat.Bab] = 2
                 });
 
-                Check.That(sut.Constraints).HasSize(2);
-                Check.That(sut.Constraints[Stat.Str]).IsEqualTo(13);
-                Check.That(sut.Constraints[Stat.Bab]).IsEqualTo(2);
+                Check.That(sut.Stats).HasSize(2);
+                Check.That(sut.Stats[Stat.Str]).IsEqualTo(13);
+                Check.That(sut.Stats[Stat.Bab]).IsEqualTo(2);
             }
 
             [Fact]
@@ -31,15 +31,32 @@ namespace PFFeatTree.Tests
                     .Int(16).Wis(17).Cha(18)
                     .Bab(3).Cl(5).Build();
 
-                Check.That(sut.Constraints).HasSize(8);
-                Check.That(sut.Constraints[Stat.Str]).IsEqualTo(13);
-                Check.That(sut.Constraints[Stat.Dex]).IsEqualTo(14);
-                Check.That(sut.Constraints[Stat.Con]).IsEqualTo(15);
-                Check.That(sut.Constraints[Stat.Int]).IsEqualTo(16);
-                Check.That(sut.Constraints[Stat.Wis]).IsEqualTo(17);
-                Check.That(sut.Constraints[Stat.Cha]).IsEqualTo(18);
-                Check.That(sut.Constraints[Stat.Bab]).IsEqualTo(3);
-                Check.That(sut.Constraints[Stat.Cl]).IsEqualTo(5);
+                Check.That(sut.Stats).HasSize(8);
+                Check.That(sut.Stats[Stat.Str]).IsEqualTo(13);
+                Check.That(sut.Stats[Stat.Dex]).IsEqualTo(14);
+                Check.That(sut.Stats[Stat.Con]).IsEqualTo(15);
+                Check.That(sut.Stats[Stat.Int]).IsEqualTo(16);
+                Check.That(sut.Stats[Stat.Wis]).IsEqualTo(17);
+                Check.That(sut.Stats[Stat.Cha]).IsEqualTo(18);
+                Check.That(sut.Stats[Stat.Bab]).IsEqualTo(3);
+                Check.That(sut.Stats[Stat.Cl]).IsEqualTo(5);
+            }
+
+            [Fact]
+            public void Can_Be_Created_By_Builder_With_Defaults()
+            {
+                StatBlock sut = StatBlock.With().Default()
+                    .Str(13).Build();
+
+                Check.That(sut.Stats).HasSize(7);
+                Check.That(sut.Stats[Stat.Str]).IsEqualTo(13);
+                Check.That(sut.Stats[Stat.Dex]).IsEqualTo(10);
+                Check.That(sut.Stats[Stat.Con]).IsEqualTo(10);
+                Check.That(sut.Stats[Stat.Int]).IsEqualTo(10);
+                Check.That(sut.Stats[Stat.Wis]).IsEqualTo(10);
+                Check.That(sut.Stats[Stat.Cha]).IsEqualTo(10);
+                Check.That(sut.Stats[Stat.Bab]).IsEqualTo(1);
+                Check.That(sut.Stats).Not.ContainsKey(Stat.Cl);
             }
         }
 

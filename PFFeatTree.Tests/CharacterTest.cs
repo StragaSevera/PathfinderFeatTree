@@ -10,14 +10,14 @@ namespace PFFeatTree.Tests
         {
             var sut = new Character();
 
-            Check.That(sut.Stats.Str).IsEqualTo(10);
-            Check.That(sut.Stats.Dex).IsEqualTo(10);
-            Check.That(sut.Stats.Con).IsEqualTo(10);
-            Check.That(sut.Stats.Int).IsEqualTo(10);
-            Check.That(sut.Stats.Wis).IsEqualTo(10);
-            Check.That(sut.Stats.Cha).IsEqualTo(10);
-            Check.That(sut.Stats.Bab).IsEqualTo(1);
-            Check.That(sut.Stats.Cl).IsEqualTo(-1);
+            Check.That(sut.StatBlock.Str).IsEqualTo(10);
+            Check.That(sut.StatBlock.Dex).IsEqualTo(10);
+            Check.That(sut.StatBlock.Con).IsEqualTo(10);
+            Check.That(sut.StatBlock.Int).IsEqualTo(10);
+            Check.That(sut.StatBlock.Wis).IsEqualTo(10);
+            Check.That(sut.StatBlock.Cha).IsEqualTo(10);
+            Check.That(sut.StatBlock.Bab).IsEqualTo(1);
+            Check.That(sut.StatBlock.Cl).IsEqualTo(-1);
         }
 
         [Fact]
@@ -30,14 +30,14 @@ namespace PFFeatTree.Tests
 
             var sut = new Character(stats);
 
-            Check.That(sut.Stats.Str).IsEqualTo(13);
-            Check.That(sut.Stats.Dex).IsEqualTo(14);
-            Check.That(sut.Stats.Con).IsEqualTo(15);
-            Check.That(sut.Stats.Int).IsEqualTo(16);
-            Check.That(sut.Stats.Wis).IsEqualTo(17);
-            Check.That(sut.Stats.Cha).IsEqualTo(18);
-            Check.That(sut.Stats.Bab).IsEqualTo(3);
-            Check.That(sut.Stats.Cl).IsEqualTo(5);
+            Check.That(sut.StatBlock.Str).IsEqualTo(13);
+            Check.That(sut.StatBlock.Dex).IsEqualTo(14);
+            Check.That(sut.StatBlock.Con).IsEqualTo(15);
+            Check.That(sut.StatBlock.Int).IsEqualTo(16);
+            Check.That(sut.StatBlock.Wis).IsEqualTo(17);
+            Check.That(sut.StatBlock.Cha).IsEqualTo(18);
+            Check.That(sut.StatBlock.Bab).IsEqualTo(3);
+            Check.That(sut.StatBlock.Cl).IsEqualTo(5);
         }
     }
 }

@@ -2,19 +2,16 @@ namespace PFFeatTree
 {
     public class Character
     {
-        public StatBlock Stats { get; }
+        public StatBlock StatBlock { get; }
 
         public Character()
         {
-            Stats = StatBlock.With()
-                .Str(10).Dex(10).Con(10)
-                .Int(10).Wis(10).Cha(10)
-                .Bab(1).Build();
+            StatBlock = StatBlock.With().Default().Build();
         }
 
-        public Character(StatBlock stats)
+        public Character(StatBlock statBlock)
         {
-            Stats = stats;
+            StatBlock = statBlock;
         }
     }
 }
